@@ -80,6 +80,7 @@ class RSU(nn.Module):
         self.encoder = Encoder(in_channel, out_channel, mid_channel, layers, padding)
         self.center = conv_block(mid_channel, mid_channel, padding=2, dilation=2)
         self.decoder = Decoder(in_channel, out_channel, mid_channel, layers, padding)
+        # self.decoder = Decoder(out_channel, mid_channel, mid_channel, layers, padding)
 
     def forward(self, x):
         features = deque()
@@ -92,6 +93,7 @@ class RSU(nn.Module):
             inputs = outputs
 
         center = self.center(inputs)
+        # center = self.center(int(inputs/2))
         inputs = torch.cat([inputs, center], dim=1)
         features.pop()
 

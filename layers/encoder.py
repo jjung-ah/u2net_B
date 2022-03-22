@@ -40,11 +40,15 @@ class BasicEncoder(nn.Module):
         self.layers = self._build_layers(in_channel, out_channel, mid_channel, dilation, padding)
 
     def _build_layers(self, in_channel, out_channel, mid_channel, dilation, padding):
-        # modules = [conv_block(in_channel, out_channel)]
-        modules = [conv_block(out_channel, mid_channel)]
+        modules = [conv_block(in_channel, out_channel)]
+        # modules = [conv_block(out_channel, out_channel)]
         for idx, factor in enumerate(dilation):
-            modules.append(
-                conv_block(mid_channel,mid_channel,dilation=factor, padding=padding * factor,))
+            if idx == 0:
+                modules.append(
+                    conv_block(out_channel, mid_channel, dilation=factor, padding=padding * factor, ))
+            else:
+                modules.append(
+                    conv_block(mid_channel,mid_channel,dilation=factor, padding=padding * factor,))
 
         # for i, factor in enumerate(dilation):
         #     if i == 0:

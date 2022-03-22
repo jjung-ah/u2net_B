@@ -23,9 +23,11 @@ class Decoder(nn.Module):
         modules = []
         for i in range(depth-1):
             if i == 0:
-                modules.append(conv_block(2*mid_channel, out_channel))
+                modules.append(conv_block(2 * mid_channel, out_channel))
+                # modules.append(conv_block(mid_channel, mid_channel))  # 20220322
             else:
-                modules.append(conv_block(2*mid_channel, mid_channel))
+                modules.append(conv_block(2 * mid_channel, mid_channel))
+                # modules.append(conv_block(mid_channel, out_channel))  # 20220322
         print(modules)
         return nn.Sequential(*reversed(modules))
 

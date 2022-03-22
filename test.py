@@ -516,7 +516,7 @@ model = U2Net(cfg)
 # inputs = torch.randn((1,3,640,640)).cuda()
 inputs = torch.randn((1, 3, 640, 640))
 outputs = model(inputs)
-print(outputs.shape)
+print()
 
 
 

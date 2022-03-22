@@ -408,12 +408,13 @@ class U2Net(nn.Module):
             layers, in_channel, mid_channel, out_channel = parameters
 
             # build rsu or rsu-4f.
-            block = STAGE_REGISTRY.get(stage_name)(in_channel, mid_channel, out_channel, layers, dilation)
+            block = STAGE_REGISTRY.get(stage_name)(in_channel, out_channel, mid_channel, layers, dilation)
             if stage_part == 'en':
                 encoder_stages.append(block)
             else:
                 decoder_stages.append(block)
-                side_stages.append(side_block(in_channel, 1, 3))
+                # side_stages.append(side_block(in_channel, 1, 3))
+                side_stages.append(side_block(out_channel, 1, 3))  # 20220322
         side_stages.insert(0, side_stages[0])
         # side_stages.append(conv_block(len(side_stages), 1, kernel_size=1, padding=0,))
 
@@ -441,7 +442,7 @@ class U2Net(nn.Module):
 
         # side stages
         masks = []
-        for feature, side in zip(decoder_feature, self.side_blocks):
+        for feature, side in zip(decoder_feature, self.side_stages):
             outputs = side(feature)
             masks.append(upsample(outputs, size=self.cfg.training.transforms.resize.shape))
 
