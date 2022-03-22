@@ -51,8 +51,8 @@ class BasicDecoder(nn.Module):
             _in_channel = 2 * mid_channel
             _out_channel = mid_channel
             modules.append(conv_block(_in_channel, _out_channel, padding=padding * factor, dilation=factor))
-        modules.append(conv_block(_in_channel, _in_channel))  # u2net
-        # modules.append(conv_block(_in_channel, 2 * _in_channel))  # 20220225 by lee
+        # modules.append(conv_block(_in_channel, _in_channel))  # u2net
+        modules.append(conv_block(_in_channel, 2 * _in_channel))  # 20220225 by lee
 
 
         return nn.Sequential(*modules)

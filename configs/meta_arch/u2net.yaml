@@ -1,3 +1,41 @@
+#architecture:
+#  name: U2Net
+#  stages:
+#    rsu-en1: [7, 3, 32, 64]
+#    rsu-en2: [6, 64, 32, 128]
+#    rsu-en3: [5, 128, 64, 256]
+#    rsu-en4: [4, 256, 128, 512]
+#    rsu4f-en5: [4, 512, 256, 512]
+#    rsu4f-en6: [4, 512, 256, 512]
+#    rsu4f-de5: [4, 1024, 256, 512]
+#    rsu-de4: [4, 1024, 128, 256]
+#    rsu-de3: [5, 512, 64, 128]
+#    rsu-de2: [6, 256, 32, 64]
+#    rsu-de1: [7, 128, 16, 64]
+#  params:
+#    layers: 7
+#    dilation: [1,2,4,8,4,2]
+
+
+architecture:
+  name: U2NetPlus
+  stages:
+    rsu-en1: [7, 3, 32, 64]
+    rsu-en2: [6, 64, 16, 64]
+    rsu-en3: [5, 64, 16, 64]
+    rsu-en4: [4, 64, 16, 64]
+    rsu4f-en5: [4, 64, 16, 64]
+    rsu4f-en6: [4, 64, 16, 64]
+    rsu4f-de5: [4, 128, 16, 64]
+    rsu-de4: [4, 128, 16, 64]
+    rsu-de3: [5, 128, 16, 64]
+    rsu-de2: [6, 128, 16, 64]
+    rsu-de1: [7, 128, 16, 64]
+  params:
+    # layers: 7
+    dilation: [1,2,4,8,4,2]
+
+
 
 #architecture:
 #  encoder_stages:
@@ -24,25 +62,3 @@
 #    mid_channel: 256
 #    dilation: [1,2,4,8,4,2]
 #    depth: 2 # decoder stage will - 1
-
-
-
-architecture:
-  stages:
-    rsu-en1: [7, 3, 32, 64]
-    rsu-en2: [6, 64, 32, 128]
-    rsu-en3: [5, 128, 64, 256]
-    rsu-en4: [4, 256, 128, 512]
-    rsu4f-en5: [4, 512, 256, 512]
-    rsu4f-en6: [4, 512, 256, 512]
-    rsu4f-de5: [4, 1024, 256, 512]
-    rsu-de4: [4, 1024, 128, 256]
-    rsu-de3: [5, 512, 64, 128]
-    rsu-de2: [6, 256, 32, 64]
-    rsu-de1: [7, 128, 16, 64]
-  params:
-    layers: 7
-    rsu_depth: 4
-    rsu4f_depth: 2
-    dilation: [1,2,4,8,4,2]
-
