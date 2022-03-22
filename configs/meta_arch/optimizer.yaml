@@ -1,0 +1,11 @@
+optimizer:
+  Adam:
+    learning_rate: 0.003
+    weight_decay: 0
+    eps: 0.0000008
+  SGD:
+    learning_rate: 0.001
+    momentum: 0
+    dampening: 0
+    weight_decay: 0
+    nesterov: False

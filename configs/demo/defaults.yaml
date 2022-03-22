@@ -1,0 +1,22 @@
+visualize:
+  save: True
+  saliency_map: True
+  blended_weights: 0.5
+  default_samples: [ori, gt, pred]
+threshold: 0.2
+evaluation: False  # True
+# weight: /mnt/hdd/datasets/project-hyundai-transys-caseleak/caseleak/04_results/3th/models/best_model.pth
+# weight: /mnt/hdd/datasets/project-hyundai-transys-caseleak/caseleak/04_results/additional/models/best_model.pth
+weight: /mnt/hdd/datasets/project-hyundai-transys-caseleak/caseleak/04_results/20220105-2rd/models/best_model.pth
+
+image_dir: /mnt/hdd/datasets/project-hyundai-transys-caseleak/caseleak/03_run_datasets/4th/test/image
+root_dir: /mnt/hdd/datasets/project-hyundai-transys-caseleak/caseleak/03_run_datasets/4th/test/image
+image_ext: .jpg
+
+
+#weight: /mnt/hdd/datasets/project-hyundai-transys-caseleak/caseleak/04_results/20220105-2rd/models/best_model.pth
+## weight: /mnt/hdd/datasets/project-hyundai-transys-caseleak/caseleak/04_results/3rd/models/best_model.pth
+#
+#image_dir: /mnt/hdd/datasets/project-hyundai-transys-caseleak/caseleak/01_raw_datasets/caseleak_1st_model/test_ensemble/sample_test_ensemble_220107/ch2_3/image
+#root_dir: /mnt/hdd/datasets/project-hyundai-transys-caseleak/caseleak/01_raw_datasets/caseleak_1st_model/test_ensemble/sample_test_ensemble_211122_ver1
+#image_ext: .jpg

@@ -1,0 +1,6 @@
+activate:
+  Leaky_relu:
+    negative_slope: 0.1
+    inplace: False
+  relu:
+    inplace: False

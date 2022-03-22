@@ -1,0 +1,48 @@
+
+#architecture:
+#  encoder_stages:
+#    in_channel: 3
+#    out_channel: 64  # [64,128,256,512]
+##    down_layer:
+##      interpolate: 0.5
+##      maxpool: 2
+##      avgpool: 2
+##    up_layer:
+##      interpolate: 2
+##      maxunpool: 2
+##      # transpose:
+#  decoder_stages:
+#    in_channel: 128  # [128,256,512,1024]  # will *2
+#    mid_channel: 16  # [16,32,64,128]  # will *2
+#    out_channel: 64  # [64,64,128,256,512] # TODO
+#  rsu:
+#    mid_channel: 32  # [32,32,64,128] # TODO
+#    layers: 7
+#    depth: 4
+#    # out_channel =*2
+#  rsu4f:
+#    mid_channel: 256
+#    dilation: [1,2,4,8,4,2]
+#    depth: 2 # decoder stage will - 1
+
+
+
+architecture:
+  stages:
+    rsu-en1: [7, 3, 32, 64]
+    rsu-en2: [6, 64, 32, 128]
+    rsu-en3: [5, 128, 64, 256]
+    rsu-en4: [4, 256, 128, 512]
+    rsu4f-en5: [4, 512, 256, 512]
+    rsu4f-en6: [4, 512, 256, 512]
+    rsu4f-de5: [4, 1024, 256, 512]
+    rsu-de4: [4, 1024, 128, 256]
+    rsu-de3: [5, 512, 64, 128]
+    rsu-de2: [6, 256, 32, 64]
+    rsu-de1: [7, 128, 16, 64]
+  params:
+    layers: 7
+    rsu_depth: 4
+    rsu4f_depth: 2
+    dilation: [1,2,4,8,4,2]
+

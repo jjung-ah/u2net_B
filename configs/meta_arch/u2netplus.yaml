@@ -1,0 +1,37 @@
+
+architecture:
+  encoder_stages:
+    out_channel: 64
+  decoder_stages:
+    in_channel: 128 # will *1
+    mid_channel: 16 # will *1
+    out_channel: 64  # [64,64,64,64,64] # TODO
+  rsu:
+    mid_channel: 16  # [16,16,16,16] # TODO
+    layers: 7
+    depth: 4
+    # out_channel =*1
+  rsu4f:
+    mid_channel: 16
+    dilation: [1,2,4,8,4,2]
+    depth: 2 # decoder stage will - 1
+
+
+#architecture:
+#  stages:
+#    rsu-en1: [7, 3, 16, 64]
+#    rsu-en2: [6, 64, 16, 64]
+#    rsu-en3: [5, 64, 16, 64]
+#    rsu-en4: [4, 64, 16, 64]
+#    rsu4f-en5: [4, 64, 16, 64]
+#    rsu4f-en6: [4, 64, 16, 64]
+#    rsu4f-de5: [4, 128, 16, 64]
+#    rsu-de4: [4, 128, 16, 64]
+#    rsu-de3: [5, 128, 16, 64]
+#    rsu-de2: [6, 128, 16, 64]
+#    rsu-de1: [7, 128, 16, 64]
+#  params:
+#    layers: 7
+#    rsu_depth: 4
+#    rsu4f_depth: 2
+#    dilation: [1,2,4,8,4,2]

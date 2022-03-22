@@ -1,0 +1,50 @@
+model:
+  weight:
+  meta_arch: U2Net
+  device: cuda
+
+datasets:
+  name: TransysSemantic
+  root_dir: /mnt/hdd/datasets/transys/datasets-images-transys-2021/03_run_datasets/semantic/2rd
+
+# multi-processing
+mp:
+  num_gpus: 1
+  num_machines: 1
+  machine_rank: 0
+  dist_url: tcp://127.0.0.1:50000 # TODO will be change about ports url:port
+
+solver:
+  epochs: 100
+  image_per_batch: 4
+  loss:
+    name: default
+  activate:
+    name: Leaky_relu
+  optimizer:
+    name: Adam
+
+evaluation:
+  steps: 5
+  measures: [mae, precision, recall, f_measure]
+  select: f_measure
+  f_measure:
+    beta: 0.3
+  thresholds:
+    nums: 10
+    smooth: 0.0005
+    value: 0.2 # for convert float gt masks to int masks
+
+data_loader:
+  num_workers: 4
+  pin_memory: True
+
+# only apply torchvision transforms
+transforms:
+  resize:
+    shape: 512
+    mode: 2 # 0: nearest, 1: lanczos, 2: bilinear, 3: bicubic, 4:box , 5: hamming
+  random_vertical_flip:
+    probability: 0.5
+
+output_dir: /mnt/hdd/datasets/transys/datasets-images-transys-2021/05_results/u2net/20220105-2rd

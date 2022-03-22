@@ -1,0 +1,8 @@
+defaults:
+  - logs: defaults
+  - demo: defaults
+  - meta_arch:
+    - activate
+    - optimizer
+    - u2net   # u2netplus
+  - training: 6th_training
