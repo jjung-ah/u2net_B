@@ -662,3 +662,304 @@ print(outputs.shape)
 # #
 # # print()
 
+
+
+
+import os
+from glob import glob
+from pathlib import Path
+import random
+from collections import defaultdict
+
+root_path = 'D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\'
+sub_folders = ['Right', 'Rotation', 'Top', 'Top1', 'Front', 'Front_6']
+num = 100
+ratio = 0.7
+
+IMAGE_EXTENSION = ['.jpg', '.jpeg', '.png']
+
+def is_image(paths: list):
+    images = []
+    for item in paths:
+        name, ext = os.path.splitext(item)
+        if ext in IMAGE_EXTENSION:
+            images.append(item)
+    return images
+
+
+# img_list = []
+# f = open('D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\test.txt', 'a')
+# for (path, dirs, files) in os.walk(root_path):
+#     if set(dirs) - set(sub_folders) == set() and dirs != []:
+#         for d in dirs:
+#             dir_path = path + '\\' + d
+#             print(dir_path)
+#             image_list = glob(dir_path + '\\*')
+#             # print(len(image_list[:num]))
+#             # print(image_list[:num])
+#             # print(len(image_list[num:]))
+#             # print(image_list[num:])
+#             img_list = is_image(image_list)
+#             # for i in image_list:
+#             #     name, ext = os.path.splitext(i)
+#             #     print(name, ext)
+#             #     if ext in IMAGE_EXTENSION:
+#             #         img_list.append(i)
+#             print(img_list)
+#             for i in image_list:
+#                 data = i + '\n'
+#                 f.write(data)
+
+
+# l = [1, 2, 3]
+# print(l[0], l[1:])
+
+
+def make_image_list(root_path: str):
+    for (path, dirs, files) in os.walk(root_path):
+        if set(dirs) - set(sub_folders) == set() and dirs != []:
+            for d in dirs:
+                dir_path = path + f'{os.sep}' + d
+                # print(dir_path)
+                image_list = glob(dir_path + f'{os.sep}' + '*.jpg')
+                # image_path_list = glob(dir_path + f'{os.sep}' + '.*')
+                # img_file_list = is_image(image_path_list)
+    return image_list
+
+def split_test_list(image_list: list, num: int):
+    train_val_list = image_list[:num]
+    test_list = image_list[num:]
+    return train_val_list, test_list
+
+def split_train_val(train_val_list: list, ratio: float, shuffle: False):
+    if shuffle == True:
+        random.shuffle(train_val_list)
+    length = len(train_val_list)
+    split_num = int(length * ratio)
+    train_set = train_val_list[:split_num]
+    val_set = train_val_list[split_num:]
+    return train_set, val_set
+
+def split_shuffle_test_list(root_path: str, num: int):
+    train_val_dict = defaultdict()
+    test_dict = defaultdict()
+    test_list = []
+    for (path, dirs, files) in os.walk(root_path):
+        if set(dirs) - set(sub_folders) == set() and dirs != []:
+            dir_path = path + f'{os.sep}' + dirs[0]
+            # print(dir_path)
+            # image_path_list = glob(dir_path + f'{os.sep}' + '.*')
+            # img_file_list = is_image(image_path_list)
+            img_file_list = glob(dir_path + f'{os.sep}' + '*.jpg')
+            # print(img_file_list)
+            train_val_list = random.sample(img_file_list, num)  # 이걸로 해야하나.. 아니면 shuffle 후에 100개를 잘라야하나..?
+            # test_list = list(set(image_path_list) - set(train_val_list))
+            test_list += list(set(img_file_list) - set(train_val_list))
+            for i in train_val_list:
+                file_name = os.path.basename(i)
+                train_val_dict[file_name] = [path, dirs]
+            for j in test_list:
+                file_name = os.path.basename(j)
+                test_dict[file_name] = [path, dirs]
+    file_key = list(test_dict.keys())
+    test_datasets = make_dict_path(file_key, test_dict)
+    return train_val_dict, test_datasets
+
+def make_dataset_dict(dataset_list: list):
+    pass
+
+def split_train_val_dict(train_val_dict: dict, ratio: float, shuffle: False):
+    file_key = list(train_val_dict.keys())
+    if shuffle == True:
+        random.shuffle(file_key)
+    length = len(train_val_dict)
+    split_num = int(length * ratio)
+    train_set = file_key[:split_num]
+    val_set = file_key[split_num:]
+    train_datasets = make_dict_path(train_set, train_val_dict)
+    val_datasets = make_dict_path(val_set, train_val_dict)
+    return train_datasets, val_datasets
+
+def make_dict_path(key_name_set: list, path_dict: dict):
+    path_list = []
+    for i in key_name_set:
+        for j in path_dict[i][1]:
+            f_name = i.split('_')
+            file_name = i.replace(f_name[-2], j)
+            value = path_dict[i][0] + f'{os.sep}' + j + f'{os.sep}' + file_name
+            path_list.append(value)
+    return path_list
+
+
+
+def is_label():
+    pass
+
+def save_text(image_list: list, out_dir: str):
+    if is_label == False:
+        f = open(out_dir, 'a', encoding='utf-8')
+        for i in image_list:
+            data = i + '\n'
+            f.write(data)
+    else:
+        f = open(out_dir, 'a', encoding='utf-8')
+        for i in image_list:
+            data = i + '\n'
+            f.write(data)
+    f.close()
+
+
+def check_text_file():
+    pass
+
+
+# @hydra.main(config_path='configs', config_name='config.yaml')
+# def main(cfg):
+#     # cfg = setup(cfg)
+#     if cfg.datasets.parsing:
+#         parser = Parser(cfg)
+#
+#
+# if __name__ == '__main__':
+#     main()
+
+
+# train_val_datasets, test_datasets = split_shuffle_test_list(root_path, 100)
+# # # print(train_val_datasets)
+# # # print(len(train_val_datasets))
+# train_datasets, val_datasets = split_train_val_dict(train_val_datasets, 0.7, False)
+# # # print(train_datasets)
+# # save_text(test_datasets, 'D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\test.txt')
+# # save_text(train_datasets, 'D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\train.txt')
+# # save_text(val_datasets, 'D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\val.txt')
+
+
+# dict = {'1': ['one', ['10', '11']], '2': ['two', ['20', '22']], '3': ['three', ['30', '33']]}
+# for i in list(dict.keys())[:2]:
+#     print(dict[i])
+#     print(dict[i][1])
+
+
+def check_test_file(self):
+    text_list = []
+    f = open('D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\test.txt', 'r', encoding='utf-8')
+    text = f.readlines()
+    train_intersection = set(train_datasets).intersection(set(text))
+    val_intersection = set(val_datasets).intersection(set(text))
+    pass
+
+# f = open('D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\test.txt', 'r', encoding='utf-8')  # encoding='cp949'
+# text = f.readlines()
+# text_list = [i.split('\n')[0] for i in text]
+# print(text_list)
+# train_intersection = set(train_datasets).intersection(set(text))
+# val_intersection = set(val_datasets).intersection(set(text))
+# # print(val_datasets)
+# print(train_intersection)
+# print(val_intersection)
+
+# a = set([1, 2, 3])
+# b = set([1, 2, 5])
+# print(a.intersection(b))
+
+
+root_dir = 'D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\'
+
+def get_subfolder(dirname):
+    subfolders = [f.path for f in os.scandir(dirname) if f.is_dir()]
+    for dirname in list(subfolders):
+        subfolders.extend(get_subfolder(dirname))
+    return subfolders
+
+# subfolders = get_subfolder(root_dir)
+# print(subfolders)
+# sub = [os.path.dirname(i) for i in subfolders if i.find('image') != -1]
+# print(sub)
+
+def get_path_subfolders(root_dir):
+    sub_folders = ['Right', 'Rotation', 'Top', 'Top1', 'Front', 'Front_6']
+    path_dirs_list = []
+    for (path, dirs, files) in os.walk(root_dir):
+        if set(dirs) - set(sub_folders) == set() and dirs != []:
+            path_dirs_list.append([path, dirs])
+    return path_dirs_list
+
+path_dirs_list = get_path_subfolders(root_dir)
+print(path_dirs_list)
+
+def get_datasets(path_list):
+    datasets = []
+    for path in path_list:
+        datasets += glob(os.path.join(path, 'image', '*'))
+    return datasets
+
+# image_datasets = get_datasets(subfolders)
+# print(image_datasets)
+
+def make_datasets_dict(datasets_list):
+    dataset_dict = dict()
+    for i in datasets_list:
+        path_dirs = os.path.split(i)[0].split(os.path.sep)
+        file_name = os.path.split(i)[1]
+        roi_path, view_dir, last_dir = i.split(os.path.join(path_dirs[-2], path_dirs[-1]))[0], path_dirs[-2], path_dirs[-1]
+        dataset_dict[file_name] = [roi_path, view_dir, last_dir]
+    return dataset_dict
+
+# image_dict = make_datasets_dict(image_datasets)
+# print(image_dict)
+
+def make_pairwise_file(dataset_dict):
+
+    pass
+
+
+
+
+def split_shuffle_test_list(root_path: str, num: int):
+    test_dict = defaultdict()
+    test_list = []
+    for (path, dirs, files) in os.walk(root_path):
+        if set(dirs) - set(sub_folders) == set() and dirs != []:
+            dir_path = path + f'{os.sep}' + dirs[0]
+            # print(dir_path)
+            # image_path_list = glob(dir_path + f'{os.sep}' + '.*')
+            # img_file_list = is_image(image_path_list)
+            img_file_list = glob(dir_path + f'{os.sep}' + '*.jpg')
+            # print(img_file_list)
+            train_val_list = random.sample(img_file_list, num)  # 이걸로 해야하나.. 아니면 shuffle 후에 100개를 잘라야하나..?
+            # test_list = list(set(image_path_list) - set(train_val_list))
+            test_list += list(set(img_file_list) - set(train_val_list))
+            for i in train_val_list:
+                file_name = os.path.basename(i)
+                train_val_dict[file_name] = [path, dirs]
+            for j in test_list:
+                file_name = os.path.basename(j)
+                test_dict[file_name] = [path, dirs]
+    file_key = list(test_dict.keys())
+    test_datasets = make_dict_path(file_key, test_dict)
+    return train_val_dict, test_datasets
+
+
+
+
+
+# import cv2
+#
+# # image1 = cv2.imread("D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\test\\P06L7010853049013D900_L_01-Rear Cover_Top_4000%.jpg")
+# # image2 = cv2.imread("D:\\datasets\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\test\\P06L7011827106013D900_L_01-Rear Cover_Top_4000%.jpg")
+# # image3 = cv2.imread("D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\test\\P06L7020903053013D900_L_01-Rear Cover_Top_4000%.jpg")
+# image1 = cv2.imread("D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\test\\P10L3041130044064G420_L_01_P7_Top_8000%.jpg")
+# image2 = cv2.imread("D:\\datasets\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\test\\P11L1302205132074G420_L_01_P7_Top_8000%.jpg")
+# image3 = cv2.imread("D:\\datasets\\project-hyundai-transys-caseleak-datasets-v2\\01_raw\\test\\P11L2060047287064G420_L_01_P7_Top_8000%.jpg")
+#
+#
+# # image = cv2.addWeighted(image1, image2, image3)
+# # image = (image1 + image2 + image3) / 3
+# image = cv2.add(image1, image2, image3)
+# # image = image1 - image
+#
+# # cv2.imshow("AVG", image1)
+# cv2.imshow("AVG", image)
+# cv2.waitKey()
+# cv2.destroyAllWindows()
+
